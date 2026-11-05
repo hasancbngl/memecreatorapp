@@ -1,6 +1,8 @@
 package com.hasancbngl.memecreatorapp.core.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val DarkColorScheme = darkColorScheme(
@@ -17,3 +19,13 @@ val DarkColorScheme = darkColorScheme(
     onPrimary = Color(0xFF21005D),
 )
 
+@Composable
+fun MemeCreatorTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = DarkColorScheme,
+        typography = Typography,
+        content = content
+    )
+}

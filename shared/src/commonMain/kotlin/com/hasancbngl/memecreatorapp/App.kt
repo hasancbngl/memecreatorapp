@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.hasancbngl.memecreatorapp.core.theme.MemeCreatorTheme
 import org.jetbrains.compose.resources.painterResource
 
 import memecreatorapp.shared.generated.resources.Res
@@ -22,7 +23,7 @@ import memecreatorapp.shared.generated.resources.compose_multiplatform
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    MemeCreatorTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
