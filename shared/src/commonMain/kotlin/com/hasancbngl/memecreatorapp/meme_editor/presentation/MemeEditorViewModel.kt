@@ -1,0 +1,34 @@
+package com.hasancbngl.memecreatorapp.meme_editor.presentation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+
+class MemeEditorViewModel : ViewModel() {
+
+    private var hasLoadedInitialData = false
+
+    private val _state = MutableStateFlow(MemeEditorState())
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                //load initial data here
+                hasLoadedInitialData = true
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = MemeEditorState()
+        )
+
+
+    fun onAction(action: MemeEditorAction) {
+        when (action) {
+            else -> //todo
+
+        }
+    }
+}
