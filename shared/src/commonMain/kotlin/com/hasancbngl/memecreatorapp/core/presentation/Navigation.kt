@@ -18,23 +18,23 @@ fun Navigation() {
         startDestination = Route.MemeGallery
     ) {
         composable<Route.MemeGallery> {
-            MemeGalleryScreen {
-                navController.navigate(Route.MemeEditor(it.id))
+            MemeGalleryScreen { memeTemplate ->
+                navController.navigate(Route.MemeEditor(memeTemplate.id))
+            }
+        }
+
+        composable<Route.MemeEditor> {
+            val templateId = it.toRoute<Route.MemeEditor>().templateId
+            val template = remember(templateId) {
+                memeTemplates.first { it.id == templateId }
             }
 
-            composable<Route.MemeEditor> {
-                val templateId = it.toRoute<Route.MemeEditor>().templateId
-                val template = remember(templateId) {
-                    memeTemplates.first { it.id == templateId }
+            MemeEditorRoot(
+                template = template,
+                onGoBack = {
+                    navController.navigateUp()
                 }
-
-                MemeEditorRoot(
-                    template = template,
-                    onGoBack = {
-                        navController.navigateUp()
-                    }
-                )
-            }
+            )
         }
     }
 }

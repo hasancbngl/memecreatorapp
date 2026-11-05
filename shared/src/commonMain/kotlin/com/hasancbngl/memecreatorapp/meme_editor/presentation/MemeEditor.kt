@@ -1,11 +1,23 @@
 package com.hasancbngl.memecreatorapp.meme_editor.presentation
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.Image
 import com.hasancbngl.memecreatorapp.core.presentation.MemeTemplate
+import com.hasancbngl.memecreatorapp.core.presentation.memeTemplates
 import com.hasancbngl.memecreatorapp.core.theme.MemeCreatorTheme
+import memecreatorapp.shared.generated.resources.Res
+import memecreatorapp.shared.generated.resources.meme_template_01
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -18,16 +30,28 @@ fun MemeEditorRoot(
 
     MemeEditorScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        template = template
     )
 }
 
 @Composable
 fun MemeEditorScreen(
+    template: MemeTemplate,
     state: MemeEditorState,
     onAction: (MemeEditorAction) -> Unit
 ) {
-
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(template.drawable),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
 
 @Preview
@@ -36,7 +60,11 @@ private fun Preview() {
     MemeCreatorTheme {
         MemeEditorScreen(
             state = MemeEditorState(),
-            onAction = {}
+            onAction = {},
+            template = MemeTemplate(
+                "meme_template_01",
+                Res.drawable.meme_template_01
+            )
         )
     }
 }
