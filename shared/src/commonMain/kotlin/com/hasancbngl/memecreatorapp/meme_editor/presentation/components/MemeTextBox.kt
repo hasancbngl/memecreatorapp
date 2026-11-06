@@ -45,7 +45,6 @@ fun MemeTextBox(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     val memeTextFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -59,7 +58,7 @@ fun MemeTextBox(
     }
 
     LaunchedEffect(textBoxInteractionState, memeText.id) {
-        if (textBoxInteractionState !is TextBoxInteractionState.Editing) {
+        if (textBoxInteractionState !is TextBoxInteractionState.Selected) {
             focusManager.clearFocus()
         }
     }
