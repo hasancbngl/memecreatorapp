@@ -32,7 +32,7 @@ class MemeEditorViewModel : ViewModel() {
             MemeEditorAction.OnAddTextClick -> TODO()
             MemeEditorAction.OnConfirmLeaveWithoutSaving -> TODO()
             is MemeEditorAction.OnContainerSizeChange -> updateContainerSize(action.size)
-            is MemeEditorAction.OnDeleteMemeTextClick -> TODO()
+            is MemeEditorAction.OnDeleteMemeTextClick -> deleteMemeText(action.id)
             MemeEditorAction.OnDismissLeaveWithoutSaving -> TODO()
             is MemeEditorAction.OnEditMemeText -> editMemeText(action.id)
             MemeEditorAction.OnGoBackClick -> TODO()
@@ -41,6 +41,16 @@ class MemeEditorViewModel : ViewModel() {
             is MemeEditorAction.OnSaveMemeClick -> TODO()
             is MemeEditorAction.OnSelectMemeText -> selectMemeText(action.id)
             MemeEditorAction.OnTapOutsideSelectedText -> TODO()
+        }
+    }
+
+    private fun deleteMemeText(id: String) {
+        _state.update {
+            it.copy(
+                memeTexts = it.memeTexts.filter { memeText ->
+                    memeText.id != id
+                }
+            )
         }
     }
 
