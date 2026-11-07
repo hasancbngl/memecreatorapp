@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,11 +33,18 @@ import com.hasancbngl.memecreatorapp.core.presentation.MemeTemplate
 import com.hasancbngl.memecreatorapp.core.presentation.memeTemplates
 import com.hasancbngl.memecreatorapp.core.theme.MemeCreatorTheme
 import com.hasancbngl.memecreatorapp.meme_editor.presentation.components.BottomBar
+import com.hasancbngl.memecreatorapp.meme_editor.presentation.components.ConfirmationDialog
+import com.hasancbngl.memecreatorapp.meme_editor.presentation.components.ConfirmationDialogConfig
 import com.hasancbngl.memecreatorapp.meme_editor.presentation.components.DraggableContainer
 import com.hasancbngl.memecreatorapp.meme_editor.presentation.components.MemeTextBox
 import memecreatorapp.shared.generated.resources.Res
+import memecreatorapp.shared.generated.resources.cancel
+import memecreatorapp.shared.generated.resources.leave
+import memecreatorapp.shared.generated.resources.leave_editor_message
+import memecreatorapp.shared.generated.resources.leave_editor_title
 import memecreatorapp.shared.generated.resources.meme_template_01
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -151,6 +159,24 @@ fun MemeEditorScreen(
                 )
             }
         }
+    }
+
+    if(state.isLeavingWithoutSaving) {
+        ConfirmationDialog(
+            config = ConfirmationDialogConfig(
+                title = stringResource(Res.string.leave_editor_title),
+                message = stringResource(Res.string.leave_editor_message),
+                confirmButtonText = stringResource(Res.string.leave),
+                cancelButtonText = stringResource(Res.string.cancel),
+                confirmButtonColor = MaterialTheme.colorScheme.secondary
+            ),
+            onConfirm = {
+                onAction(MemeEditorAction.OnConfirmLeaveWithoutSaving)
+            },
+            onDismiss = {
+                onAction(MemeEditorAction.OnDismissLeaveWithoutSaving)
+            }
+        )
     }
 }
 
