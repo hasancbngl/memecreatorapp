@@ -6,11 +6,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.filled.ArrowLeft
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -37,6 +47,12 @@ fun MemeEditorRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(state.hasLeftEditor){
+        if (state.hasLeftEditor){
+            onGoBack()
+        }
+    }
+
     MemeEditorScreen(
         state = state,
         onAction = viewModel::onAction,
@@ -44,12 +60,19 @@ fun MemeEditorRoot(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MemeEditorScreen(
     template: MemeTemplate,
     state: MemeEditorState,
     onAction: (MemeEditorAction) -> Unit
 ) {
+    BackHandler(
+        enabled = !state.isLeavingWithoutSaving
+    ) {
+        onAction(MemeEditorAction.OnGoBackClick)
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -112,6 +135,19 @@ fun MemeEditorScreen(
                         onAction(MemeEditorAction.OnDeleteMemeTextClick(it))
                     },
                     modifier = Modifier.matchParentSize()
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    onAction(MemeEditorAction.OnGoBackClick)
+                },
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
                 )
             }
         }
