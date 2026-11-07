@@ -77,6 +77,7 @@ class MemeEditorViewModel : ViewModel() {
         } else {
             _state.update {
                 it.copy(
+                    //it will show leave confirm dialog
                     isLeavingWithoutSaving = true
                 )
             }
