@@ -22,7 +22,12 @@ fun BottomBar(
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
-            .padding(16.dp),
+            .padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 32.dp
+            ),
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)
     ) {
         OutlinedButton(
