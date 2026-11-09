@@ -3,6 +3,7 @@ package com.hasancbngl.memecreatorapp.meme_editor.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -114,13 +115,18 @@ fun MemeEditorScreen(
                 Image(
                     painter = painterResource(template.drawable),
                     contentDescription = null,
-                    contentScale = if (windowSize.width > windowSize.height) {
-                        ContentScale.FillHeight
-                    } else ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .then(
+                            if(windowSize.width > windowSize.height) {
+                                Modifier.fillMaxHeight()
+                            } else Modifier.fillMaxWidth()
+                        )
                         .onSizeChanged {
                             onAction(MemeEditorAction.OnContainerSizeChange(it))
-                        }
+                        },
+                    contentScale = if(windowSize.width > windowSize.height) {
+                        ContentScale.FillHeight
+                    } else ContentScale.FillWidth
                 )
                 DraggableContainer(
                     children = state.memeTexts,
