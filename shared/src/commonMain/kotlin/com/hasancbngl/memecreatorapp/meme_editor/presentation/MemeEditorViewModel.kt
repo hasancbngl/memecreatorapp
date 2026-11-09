@@ -4,15 +4,24 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hasancbngl.memecreatorapp.core.presentation.MemeTemplate
+import com.hasancbngl.memecreatorapp.meme_editor.domain.MemeExporter
+import com.hasancbngl.memecreatorapp.meme_editor.domain.SaveToStorageStrategy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getDrawableResourceBytes
+import org.jetbrains.compose.resources.getSystemResourceEnvironment
 import kotlin.collections.copy
 import kotlin.uuid.Uuid
 
-class MemeEditorViewModel : ViewModel() {
+class MemeEditorViewModel(
+    private val memeExporter: MemeExporter,
+    private val storageStrategy: SaveToStorageStrategy
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -47,9 +56,31 @@ class MemeEditorViewModel : ViewModel() {
                 scale = action.scale
             )
 
-            is MemeEditorAction.OnSaveMemeClick -> TODO()
+            is MemeEditorAction.OnSaveMemeClick -> saveMeme(action.memeTemplate)
             is MemeEditorAction.OnSelectMemeText -> selectMemeText(action.id)
             MemeEditorAction.OnTapOutsideSelectedText -> unselectMemeText()
+        }
+    }
+
+    private fun saveMeme(memeTemplate: MemeTemplate) {
+        viewModelScope.launch {
+            memeExporter
+                .exportMeme(
+                    backgroundImageBytes = getDrawableResourceBytes(
+                        environment = getSystemResourceEnvironment(),
+                        resource = memeTemplate.drawable
+                    ),
+                    memeTexts = state.value.memeTexts,
+                    templateSize = state.value.templateSize,
+                    saveToStorageStrategy = storageStrategy
+                )
+                .onSuccess {
+                    println("that works")
+                    // shareSheet.shareFile(it)
+                }
+                .onFailure {
+                    it.printStackTrace()
+                }
         }
     }
 

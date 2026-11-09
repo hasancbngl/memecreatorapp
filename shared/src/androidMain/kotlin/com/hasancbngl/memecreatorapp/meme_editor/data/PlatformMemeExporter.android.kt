@@ -24,9 +24,6 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.div
-import kotlin.times
-import kotlin.unaryMinus
 
 actual class PlatformMemeExporter(
     private val context: Context
