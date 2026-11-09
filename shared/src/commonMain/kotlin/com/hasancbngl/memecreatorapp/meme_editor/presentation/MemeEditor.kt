@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,6 +26,7 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,8 +57,8 @@ fun MemeEditorRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.hasLeftEditor){
-        if (state.hasLeftEditor){
+    LaunchedEffect(state.hasLeftEditor) {
+        if (state.hasLeftEditor) {
             onGoBack()
         }
     }
@@ -107,11 +109,14 @@ fun MemeEditorScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            val windowSize = LocalWindowInfo.current.containerSize
             Box {
                 Image(
                     painter = painterResource(template.drawable),
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = if (windowSize.width > windowSize.height) {
+                        ContentScale.FillHeight
+                    } else ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth()
                         .onSizeChanged {
                             onAction(MemeEditorAction.OnContainerSizeChange(it))
@@ -161,7 +166,7 @@ fun MemeEditorScreen(
         }
     }
 
-    if(state.isLeavingWithoutSaving) {
+    if (state.isLeavingWithoutSaving) {
         ConfirmationDialog(
             config = ConfirmationDialogConfig(
                 title = stringResource(Res.string.leave_editor_title),
