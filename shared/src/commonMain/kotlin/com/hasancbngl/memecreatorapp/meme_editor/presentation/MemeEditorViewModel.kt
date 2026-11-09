@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hasancbngl.memecreatorapp.core.presentation.MemeTemplate
 import com.hasancbngl.memecreatorapp.meme_editor.domain.MemeExporter
 import com.hasancbngl.memecreatorapp.meme_editor.domain.SaveToStorageStrategy
+import com.hasancbngl.memecreatorapp.meme_editor.presentation.util.PlatformShareSheet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -20,7 +21,8 @@ import kotlin.uuid.Uuid
 
 class MemeEditorViewModel(
     private val memeExporter: MemeExporter,
-    private val storageStrategy: SaveToStorageStrategy
+    private val storageStrategy: SaveToStorageStrategy,
+    private val shareSheet: PlatformShareSheet
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -75,8 +77,7 @@ class MemeEditorViewModel(
                     saveToStorageStrategy = storageStrategy
                 )
                 .onSuccess {
-                    println("that works")
-                    // shareSheet.shareFile(it)
+                     shareSheet.shareFile(it)
                 }
                 .onFailure {
                     it.printStackTrace()
